@@ -3,26 +3,32 @@ import setNextPage from "../functions/setNextPage";
 import setFirstPage from "../functions/setFirstPage";
 import { useEffect, useState } from "react";
 import { getAllGames } from "../../gamesapi";
+import addGameToList from "../functions/addGameToList";
+import deleteGameFromList from "../functions/deleteGameFromList";
 
 function AllGamesList() {
     const [games, setGames] = useState([]);
+    const [myGames, setMyGames] = useState([]);
     const [page, setPage] = useState(1);
-    const [gameToAdd, setGameToAdd] = useState({});
 
     useEffect(() => {
+        async function getMyGames() {
+            const response = await fetch(`http://localhost:8080/mygame/`);
+            if (!response.ok) {
+                const message = `Error: ${response.statusText}`;
+                console.error(message);
+                return;
+            }
+            const mygames = await response.json();
+            setMyGames(mygames);
+        }
         handleFetch();
-    }, [page]);
+        getMyGames();
+    }, [page, myGames.length]);
 
     const handleFetch = () => {
         getAllGames(page)
             .then(data => setGames(data.results));
-    };
-
-    const addGameToList = (gameName, releseYear) => {
-        setGameToAdd({
-            name: gameName,
-            year: releseYear
-        });
     };
 
     return (
@@ -43,7 +49,18 @@ function AllGamesList() {
                                     <tr key={key}>
                                         <td>{val.name}</td>
                                         <td>{val.released.slice(0, 4)}</td>
-                                        <td><button onClick={() => addGameToList(val.name, val.released.slice(0, 4))} class="btn btn-light">Add</button></td>
+                                        <td>{myGames.some(e => e.name == val.name) == true
+                                            ? <button onClick={() => {
+                                                setMyGames([
+                                                    deleteGameFromList(myGames, myGames.find(e => e.name == val.name)._id)
+                                                ])
+                                            }} class="btn btn-danger">Delete</button>
+                                            : <button onClick={() => {
+                                                setMyGames([
+                                                    ...myGames,
+                                                    addGameToList({ name: val.name, year: val.released.slice(0, 4) })
+                                                ])
+                                            }} class="btn btn-primary">Add</button>}</td>
                                     </tr>
                                 )
                             })}
@@ -60,7 +77,6 @@ function AllGamesList() {
                             <input onClick={() => setPage(setNextPage(page))} type="button" class="page-link" value="Next" />
                         </ul>
                     </nav>
-
                 </div>
             }
         </div>

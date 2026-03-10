@@ -1,11 +1,26 @@
 import { useEffect, useState } from "react";
+import deleteGameFromList from "../functions/deleteGameFromList";
 
 function MyGamesList() {
     const [myGames, setMyGames] = useState([]);
     const [page, setPage] = useState(1);
 
     useEffect(() => {
-    }, [page]);
+        async function getMyGames() {
+            const response = await fetch(`http://localhost:8080/mygame/`);
+            if (!response.ok) {
+                const message = `Error: ${response.statusText}`;
+                console.error(message);
+                return;
+            }
+            const mygames = await response.json();
+            setMyGames(mygames);
+        }
+        getMyGames();
+        return;
+    }, [page, myGames[0]]);
+
+    console.log(myGames)
 
     return (
         <div class="d-flex justify-content-center">
@@ -16,6 +31,7 @@ function MyGamesList() {
                             <tr>
                                 <th>Name</th>
                                 <th width="25%">Release Year</th>
+                                <th width="10"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -23,7 +39,14 @@ function MyGamesList() {
                                 return (
                                     <tr key={key}>
                                         <td>{val.name}</td>
-                                        <td>{val.released.slice(0, 4)}</td>
+                                        <td>{val.year}</td>
+                                        <td>
+                                            <button onClick={() => {
+                                                setMyGames([
+                                                    deleteGameFromList(myGames, myGames.find(e => e.name == val.name)._id)
+                                                ])
+                                            }} class="btn btn-danger">Delete</button>
+                                            </td>
                                     </tr>
                                 )
                             })}
