@@ -2,7 +2,7 @@ import setPreviousPage from "../functions/setPreviousPage";
 import setNextPage from "../functions/setNextPage";
 import setFirstPage from "../functions/setFirstPage";
 import { useEffect, useState } from "react";
-import { getAllGames } from "../../gamesapi";
+import { getAllGames, getGamesByText } from "../../gamesapi";
 import addGameToList from "../functions/addGameToList";
 import deleteGameFromList from "../functions/deleteGameFromList";
 
@@ -10,6 +10,8 @@ function AllGamesList() {
     const [games, setGames] = useState([]);
     const [myGames, setMyGames] = useState({ name: "", desc: "", games: [] });
     const [page, setPage] = useState(1);
+    const [searchWord, setSearchWord] = useState("")
+
 
     useEffect(() => {
         async function getMyGames() {
@@ -22,7 +24,12 @@ function AllGamesList() {
             const mygames = await response.json();
             setMyGames(mygames);
         }
-        handleFetch();
+        if (searchWord == "") {
+            handleFetch();
+        }
+        else {
+            handleSearch()
+        }
         getMyGames();
     }, [page, myGames.games.length]);
 
@@ -30,6 +37,17 @@ function AllGamesList() {
         getAllGames(page)
             .then(data => setGames(data.results));
     };
+
+    const handleSearch = () => {
+        getGamesByText(searchWord, page)
+            .then(data => setGames(data.results))
+            .catch(error => console.error(error))
+    }
+
+    function handleSearchClear() {
+        handleFetch();
+        setSearchWord("");
+    }
 
     function handleAdd(game) {
         setMyGames({
@@ -47,6 +65,11 @@ function AllGamesList() {
         <div class="d-flex justify-content-center">
             {games.length < 1 ? (<></>) :
                 <div style={{ minWidth: "50%" }}>
+                        <div class="input-group mb-3">
+                            <input value={searchWord} onChange={e => setSearchWord(e.target.value)}type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                            <button onClick={handleSearchClear} class="input-group-text" id="inputGroup-sizing-default"><i class="bi bi-x-lg"></i></button>
+                            <button onClick={handleSearch} class="input-group-text" id="inputGroup-sizing-default">Search</button>
+                        </div>
                     <table class="table table-striped align-middle table-bordered">
                         <thead >
                             <tr>
@@ -60,13 +83,13 @@ function AllGamesList() {
                                 return (
                                     <tr key={key}>
                                         <td>{val.name}</td>
-                                        <td>{val.released.slice(0, 4)}</td>
+                                        <td>{val.released != null ? val.released.slice(0, 4) : "-"}</td>
                                         <td class="d-flex justify-content-center">{myGames.games.some(e => e.name == val.name) == true
                                             ? <button onClick={() => {
                                                 handleDelete(myGames.games.find(e => e.name == val.name).name)
                                             }} class="btn btn-danger">Delete</button>
                                             : <button onClick={() => {
-                                                handleAdd({ name: val.name, year: val.released.slice(0, 4) })
+                                                handleAdd({ name: val.name, year: val.released != null ? val.released.slice(0, 4) : "-" })
                                             }} class="btn btn-primary">Add</button>}</td>
                                     </tr>
                                 )

@@ -1,6 +1,6 @@
 const apiKey = import.meta.env.VITE_API_KEY;
 
-export function getAllGames(page) {
+export async function getAllGames(page) {
     return fetch(`https://rawg.io/api/games?key=${apiKey}&page=${page}`)
         .then(response => {
             if (!response.ok) {
@@ -9,3 +9,13 @@ export function getAllGames(page) {
             return response.json();
         })
 };
+
+export async function getGamesByText(text, page) {
+    return fetch(`https://rawg.io/api/games?key=${apiKey}&page=${page}&search=${text}`)
+        .then(response => {
+            if (!response.ok)
+                throw new Error("Error in fetching games by text: " + response.status.toString());
+
+            return response.json();
+        })
+}
