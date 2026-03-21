@@ -5,10 +5,8 @@ import { useEffect, useState } from "react";
 import deleteGameFromList from "../functions/deleteGameFromList";
 
 function MyGamesList() {
-    const [myGames, setMyGames] = useState([]);
+    const [myGames, setMyGames] = useState({ name: "", desc: "", games: [] });
     const [page, setPage] = useState(1);
-    const [selectedGame, setSelectedGame] = useState({});
-    console.log(selectedGame)
 
     useEffect(() => {
         async function getMyGames() {
@@ -23,30 +21,31 @@ function MyGamesList() {
         }
         getMyGames();
         return;
-    }, [page, selectedGame]);
+    }, [page, myGames.games.length]);
 
     function handleDelete(name) {
-        setSelectedGame(name);
-        setMyGames([
-            deleteGameFromList(myGames, myGames.find(e => e.name == name)._id)
-        ])
+        setMyGames({
+            games: [...myGames.games, deleteGameFromList(myGames.games.find(e => e.name == name).game_id)]
+        })
     }
 
     return (
         <>
+            <h5 class="p-2 d-flex justify-content-center">Name</h5>
+            <p class="d-flex justify-content-center">Kuvaus</p>
             <div class="d-flex justify-content-center">
                 <div style={{ minWidth: "50%" }}>
-                    {myGames.length < 1 ? (<></>) :
+                    {myGames.games.length < 1 ? (<></>) :
                         <table class="table table-striped table-bordered align-middle table-bordered">
                             <thead>
                                 <tr>
                                     <th>Name</th>
                                     <th width="20%">Release Year</th>
-                                    <th width="14"></th>
+                                    <th width="14%"></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {myGames.map((val, key) => {
+                                {myGames.games.map((val, key) => {
                                     return (
                                         <tr key={key}>
                                             <td>{val.name}</td>
@@ -62,7 +61,7 @@ function MyGamesList() {
                             </tbody>
                         </table>
                     }
-                    {myGames.length < 20 ? (<></>) :
+                    {myGames.games.length < 20 ? (<></>) :
                         <nav>
                             <ul class="pagination justify-content-center">
                                 <div class="d-flex justify-content-center">{page == 1

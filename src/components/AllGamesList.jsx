@@ -8,7 +8,7 @@ import deleteGameFromList from "../functions/deleteGameFromList";
 
 function AllGamesList() {
     const [games, setGames] = useState([]);
-    const [myGames, setMyGames] = useState([]);
+    const [myGames, setMyGames] = useState({ name: "", desc: "", games: [] });
     const [page, setPage] = useState(1);
 
     useEffect(() => {
@@ -24,12 +24,24 @@ function AllGamesList() {
         }
         handleFetch();
         getMyGames();
-    }, [page, myGames.length]);
+    }, [page, myGames.games.length]);
 
     const handleFetch = () => {
         getAllGames(page)
             .then(data => setGames(data.results));
     };
+
+    function handleAdd(game) {
+        setMyGames({
+            games: [...myGames.games, addGameToList({ name: game.name, year: game.year })]
+        })
+    }
+
+    function handleDelete(name) {
+        setMyGames({
+            games: [...myGames.games, deleteGameFromList(myGames.games.find(e => e.name == name).game_id)]
+        })
+    }
 
     return (
         <div class="d-flex justify-content-center">
@@ -49,17 +61,12 @@ function AllGamesList() {
                                     <tr key={key}>
                                         <td>{val.name}</td>
                                         <td>{val.released.slice(0, 4)}</td>
-                                        <td class="d-flex justify-content-center">{myGames.some(e => e.name == val.name) == true
+                                        <td class="d-flex justify-content-center">{myGames.games.some(e => e.name == val.name) == true
                                             ? <button onClick={() => {
-                                                setMyGames([
-                                                    deleteGameFromList(myGames, myGames.find(e => e.name == val.name)._id)
-                                                ])
+                                                handleDelete(myGames.games.find(e => e.name == val.name).name)
                                             }} class="btn btn-danger">Delete</button>
                                             : <button onClick={() => {
-                                                setMyGames([
-                                                    ...myGames,
-                                                    addGameToList({ name: val.name, year: val.released.slice(0, 4) })
-                                                ])
+                                                handleAdd({ name: val.name, year: val.released.slice(0, 4) })
                                             }} class="btn btn-primary">Add</button>}</td>
                                     </tr>
                                 )

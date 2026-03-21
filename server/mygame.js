@@ -8,18 +8,24 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   let collection = await db.collection("mygames");
   let results = await collection.find({}).toArray();
-  res.send(results).status(200);
+  res.send(results[0]).status(200);
 });
 
 //Add a new game to a list
-router.post("/add", async (req, res) => {
+router.patch("/add", async (req, res) => {
   try {
-    let newDocument = {
-      name: req.body.name,
-      year: req.body.year
-    };
     let collection = await db.collection("mygames");
-    let result = await collection.insertOne(newDocument);
+    let id = await collection.find({}).toArray();
+    let result = await collection.updateOne({ _id: id[0]._id },
+      {
+        $push: {
+          games: {
+            game_id: new ObjectId(),
+            name: req.body.name,
+            year: req.body.year
+          }
+        }
+      });
     res.send(result).status(204);
   } catch (err) {
     console.error(err);
@@ -30,10 +36,16 @@ router.post("/add", async (req, res) => {
 // Delete game from list
 router.delete("/:id", async (req, res) => {
   try {
-    const query = { _id: new ObjectId(req.params.id) };
-
-    const collection = db.collection("mygames");
-    let result = await collection.deleteOne(query);
+    const collection = await db.collection("mygames");
+    let id = await collection.find({}).toArray();
+    let result = await collection.updateOne({ _id: id[0]._id },
+      {
+        $pull: {
+          games: {
+            game_id: new ObjectId(req.params.id) 
+          }
+        }
+      });
 
     res.send(result).status(200);
   } catch (err) {
