@@ -9,14 +9,6 @@ const client = new MongoClient(ATLAS_URI, {
     }
 });
 
-try {
-    await client.connect();
-    await client.db("admin").command({ ping: 1 });
-    console.log("Yes");
-} catch (err) {
-    console.error(err)
-}
-
 let db = client.db("games");
 
 export default db;

@@ -34,13 +34,13 @@ function AllGamesList() {
     return (
         <div class="d-flex justify-content-center">
             {games.length < 1 ? (<></>) :
-                <div class="w-50">
-                    <table class="table table-bordered">
-                        <thead>
+                <div style={{ minWidth: "50%" }}>
+                    <table class="table table-striped align-middle table-bordered">
+                        <thead >
                             <tr>
                                 <th>Name</th>
-                                <th width="15%">Release Year</th>
-                                <th width="10"></th>
+                                <th width="20%">Release Year</th>
+                                <th width="14%"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -49,7 +49,7 @@ function AllGamesList() {
                                     <tr key={key}>
                                         <td>{val.name}</td>
                                         <td>{val.released.slice(0, 4)}</td>
-                                        <td>{myGames.some(e => e.name == val.name) == true
+                                        <td class="d-flex justify-content-center">{myGames.some(e => e.name == val.name) == true
                                             ? <button onClick={() => {
                                                 setMyGames([
                                                     deleteGameFromList(myGames, myGames.find(e => e.name == val.name)._id)
@@ -68,13 +68,35 @@ function AllGamesList() {
                     </table>
                     <nav>
                         <ul class="pagination justify-content-center">
-                            <div>
-                                <button onClick={() => setPage(setFirstPage())} type="button" class="page-link" value="">
-                                    <i class="bi bi-skip-backward"></i>
-                                </button>
+                            <div class="d-flex justify-content-center">{page == 1
+                                ? <>
+                                    <li>
+                                        <button type="button" class="btn disabled" style={{ borderColor: "#dee2e6", borderRadius: "10px 0px 0px 10px", borderRight: "0px", backgroundColor: "#e9ecef" }}>
+                                            <i class="bi bi-skip-backward"></i>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button onClick={() => setPage(setPreviousPage(page))} type="button" class="btn disabled" style={{ borderColor: "#dee2e6", borderRadius: "0px", backgroundColor: "#e9ecef" }}>Previous</button>
+                                    </li>
+                                </>
+                                : <>
+                                    <li>
+                                        <button onClick={() => setPage(setFirstPage())} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "10px 0px 0px 10px", color: "#0d6efd", borderRight: "0px" }}>
+                                            <i class="bi bi-skip-backward"></i>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button onClick={() => setPage(setPreviousPage(page))} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px", color: "#0d6efd" }}>Previous</button>
+                                    </li>
+                                </>
+                            }
+                                <li>
+                                    <p class="btn" style={{ color: "#ffffff", borderRadius: "0px", borderLeft: "0px", backgroundColor: "#0d6efd" }}>{page}</p>
+                                </li>
+                                <li>
+                                    <button onClick={() => setPage(setNextPage(page))} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px 10px 10px 0px", color: "#0d6efd", borderLeft: "0px" }}>Next</button>
+                                </li>
                             </div>
-                            <input onClick={() => setPage(setPreviousPage(page))} type="button" class="page-link" value="Previous" />
-                            <input onClick={() => setPage(setNextPage(page))} type="button" class="page-link" value="Next" />
                         </ul>
                     </nav>
                 </div>
