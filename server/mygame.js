@@ -11,6 +11,25 @@ router.get("/", async (req, res) => {
   res.send(results[0]).status(200);
 });
 
+// Edit list
+router.patch("/edit", async (req, res) => {
+  try {
+    let collection = await db.collection("mygames");
+    let id = await collection.find({}).toArray();
+    let result = await collection.updateOne({ _id: id[0]._id },
+      {
+        $set: {
+          name: req.body.name,
+          desc: req.body.desc
+        }
+      });
+    res.send(result).status(204);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error editing list");
+  }
+});
+
 //Add a new game to a list
 router.patch("/add", async (req, res) => {
   try {

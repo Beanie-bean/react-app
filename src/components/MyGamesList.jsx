@@ -3,6 +3,7 @@ import setNextPage from "../functions/setNextPage";
 import setFirstPage from "../functions/setFirstPage";
 import { useEffect, useState } from "react";
 import deleteGameFromList from "../functions/deleteGameFromList";
+import EditListModal from "./EditListModal";
 
 function MyGamesList() {
     const [myGames, setMyGames] = useState({ name: "", desc: "", games: [] });
@@ -29,10 +30,24 @@ function MyGamesList() {
         })
     }
 
+    function handleEdit(name, desc) {
+        setMyGames({
+            ...myGames,
+            name: name, desc: desc
+        })
+    }
+
     return (
         <>
-            <h5 class="p-2 d-flex justify-content-center">Name</h5>
-            <p class="d-flex justify-content-center">Kuvaus</p>
+            <div class="pt-2 row justify-content-end">
+                <div class="col-4 d-flex justify-content-center">
+                    <h5 class="d-flex justify-content-center">{myGames.name}</h5>
+                </div>
+                <div class="col-4 d-flex justify-content-end">
+                    <EditListModal name={ myGames.name } desc={ myGames.desc } handleEdit={handleEdit}/>
+                </div>
+            </div>
+            <p class="d-flex justify-content-center">{myGames.desc}</p>
             <div class="d-flex justify-content-center">
                 <div style={{ minWidth: "50%" }}>
                     {myGames.games.length < 1 ? (<></>) :
