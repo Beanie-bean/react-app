@@ -10,8 +10,8 @@ function AllGamesList() {
     const [games, setGames] = useState([]);
     const [myGames, setMyGames] = useState({ name: "", desc: "", games: [] });
     const [page, setPage] = useState(1);
-    const [searchWord, setSearchWord] = useState("")
-
+    const [searchWord, setSearchWord] = useState("");
+    const [checkNextPage, setCheckNextPage] = useState("");
 
     useEffect(() => {
         async function getMyGames() {
@@ -32,10 +32,10 @@ function AllGamesList() {
         }
         getMyGames();
     }, [page, myGames.games.length]);
-
+    
     const handleFetch = () => {
         getAllGames(page)
-            .then(data => setGames(data.results));
+            .then(data => {setGames(data.results); setCheckNextPage(data.next)});
     };
 
     const handleSearch = () => {
@@ -51,7 +51,7 @@ function AllGamesList() {
 
     function handleAdd(game) {
         setMyGames({
-            games: [...myGames.games, addGameToList({ name: game.name, year: game.year })]
+            games: [...myGames.games, addGameToList({ name: game.name, released: game.released })]
         })
     }
 
@@ -89,7 +89,7 @@ function AllGamesList() {
                                                 handleDelete(myGames.games.find(e => e.name == val.name).name)
                                             }} class="btn btn-danger">Delete</button>
                                             : <button onClick={() => {
-                                                handleAdd({ name: val.name, year: val.released != null ? val.released.slice(0, 4) : "-" })
+                                                handleAdd({ name: val.name, released: val.released != null ? val.released.slice(0, 4) : "-" })
                                             }} class="btn btn-primary">Add</button>}</td>
                                     </tr>
                                 )
@@ -98,34 +98,27 @@ function AllGamesList() {
                     </table>
                     <nav>
                         <ul class="pagination justify-content-center">
-                            <div class="d-flex justify-content-center">{page == 1
-                                ? <>
-                                    <li>
-                                        <button type="button" class="btn disabled" style={{ borderColor: "#dee2e6", borderRadius: "10px 0px 0px 10px", borderRight: "0px", backgroundColor: "#e9ecef" }}>
+                            <div class="d-flex justify-content-center">
+                                <nav>
+                            <ul class="pagination justify-content-center">
+                                <div class="d-flex justify-content-center">
+                                    <li class="page-item">
+                                        <button onClick={() => setPage(setFirstPage())} disabled={page == 1} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "10px 0px 0px 10px", borderRight: "0px", backgroundColor: page == 1 ? "#e9ecef" : "#ffffff", color: page == 1 ? "#495057" : "#0d6efd" }}>
                                             <i class="bi bi-skip-backward"></i>
                                         </button>
                                     </li>
-                                    <li>
-                                        <button onClick={() => setPage(setPreviousPage(page))} type="button" class="btn disabled" style={{ borderColor: "#dee2e6", borderRadius: "0px", backgroundColor: "#e9ecef" }}>Previous</button>
-                                    </li>
-                                </>
-                                : <>
-                                    <li>
-                                        <button onClick={() => setPage(setFirstPage())} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "10px 0px 0px 10px", color: "#0d6efd", borderRight: "0px" }}>
-                                            <i class="bi bi-skip-backward"></i>
-                                        </button>
+                                    <li class="page-item">
+                                        <button onClick={() => setPage(setPreviousPage(page))} disabled={page == 1} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px", backgroundColor: page == 1 ? "#e9ecef" : "#ffffff", color: page == 1 ? "#495057" : "#0d6efd" }}>Previous</button>
                                     </li>
                                     <li>
-                                        <button onClick={() => setPage(setPreviousPage(page))} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px", color: "#0d6efd" }}>Previous</button>
+                                        <p class="btn" style={{ color: "#ffffff", borderRadius: "0px", borderLeft: "0px", backgroundColor: "#0d6efd" }}>{page}</p>
                                     </li>
-                                </>
-                            }
-                                <li>
-                                    <p class="btn" style={{ color: "#ffffff", borderRadius: "0px", borderLeft: "0px", backgroundColor: "#0d6efd" }}>{page}</p>
-                                </li>
-                                <li>
-                                    <button onClick={() => setPage(setNextPage(page))} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px 10px 10px 0px", color: "#0d6efd", borderLeft: "0px" }}>Next</button>
-                                </li>
+                                    <li class="page-item">
+                                        <button onClick={() => setPage(setNextPage(page))} disabled={checkNextPage == null} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px 10px 10px 0px", borderLeft: "0px", backgroundColor: checkNextPage == null ? "#e9ecef" : "#ffffff", color: checkNextPage == null ? "#495057" : "#0d6efd" }}>Next</button>
+                                    </li>
+                                </div>
+                            </ul>
+                        </nav>
                             </div>
                         </ul>
                     </nav>

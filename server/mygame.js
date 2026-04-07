@@ -41,7 +41,7 @@ router.patch("/add", async (req, res) => {
           games: {
             game_id: new ObjectId(),
             name: req.body.name,
-            year: req.body.year
+            released: req.body.released
           }
         }
       });

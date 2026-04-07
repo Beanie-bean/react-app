@@ -2,7 +2,7 @@ import { Link } from 'react-router'
 
 function Navbar() {
     return (
-        <nav style={{position: "sticky", top: "0"}} class="navbar navbar-expand-sm bg-body-tertiary">
+        <nav style={{position: "sticky", top: "0", zIndex: "1"}} class="navbar navbar-expand-sm bg-body-tertiary">
             <div class="container-fluid">
                 <div class="navbar-brand" href="#">
                     <Link to="/" class="nav-link" aria-current="page" href="#">React Games</Link>

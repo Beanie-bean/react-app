@@ -9,6 +9,8 @@ import AddGameModal from "./AddGameModal";
 function MyGamesList() {
     const [myGames, setMyGames] = useState({ name: "", desc: "", games: [] });
     const [page, setPage] = useState(1);
+    const [pageGames, setPageGames] = useState([]); 
+    const totalPages = Math.ceil(myGames.games.length / 20);
 
     useEffect(() => {
         async function getMyGames() {
@@ -22,9 +24,10 @@ function MyGamesList() {
             setMyGames(mygames);
         }
         getMyGames();
+        setPageGames(myGames.games.slice((page - 1) * 20, (page - 1) * 20 + 20));
         return;
     }, [page, myGames.games.length]);
-
+    
     function handleDelete(name) {
         setMyGames({
             games: [...myGames.games, deleteGameFromList(myGames.games.find(e => e.name == name).game_id)]
@@ -33,7 +36,7 @@ function MyGamesList() {
 
     function handleAdd(game) {
         setMyGames({
-            games: [...myGames.games, {name: game.name, year: game.year}]
+            games: [...myGames.games, {name: game.name, released: game.released}]
         })
     }
 
@@ -68,52 +71,41 @@ function MyGamesList() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {myGames.games.map((val, key) => {
-                                    return (
-                                        <tr key={key}>
-                                            <td>{val.name}</td>
-                                            <td>{val.year}</td>
-                                            <td>
-                                                <button onClick={() => {
-                                                    handleDelete(val.name);
-                                                }} class="btn btn-danger">Delete</button>
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
+                                
+                                    {pageGames.map((val, key) => {
+                                        return (
+                                            <tr key={key}>
+                                                <td>{val.name}</td>
+                                                <td>{val.released}</td>
+                                                <td>
+                                                    <button onClick={() => {
+                                                        handleDelete(val.name);
+                                                    }} class="btn btn-danger">Delete</button>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                
                             </tbody>
                         </table>
                     }
                     {myGames.games.length < 20 ? (<></>) :
                         <nav>
                             <ul class="pagination justify-content-center">
-                                <div class="d-flex justify-content-center">{page == 1
-                                    ? <>
-                                        <li class="page-item">
-                                            <button type="button" class="btn disabled" style={{ borderColor: "#dee2e6", borderRadius: "10px 0px 0px 10px", borderRight: "0px", backgroundColor: "#e9ecef" }}>
-                                                <i class="bi bi-skip-backward"></i>
-                                            </button>
-                                        </li>
-                                        <li class="page-item">
-                                            <button onClick={() => setPage(setPreviousPage(page))} type="button" class="btn disabled" style={{ borderColor: "#dee2e6", borderRadius: "0px", backgroundColor: "#e9ecef" }}>Previous</button>
-                                        </li>
-                                    </>
-                                    : <>
-                                        <li class="page-item">
-                                            <button onClick={() => setPage(setFirstPage())} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "10px 0px 0px 10px", color: "#0d6efd", borderRight: "0px" }}>
-                                                <i class="bi bi-skip-backward"></i>
-                                            </button>
-                                        </li>
-                                        <li class="page-item">
-                                            <button onClick={() => setPage(setPreviousPage(page))} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px", color: "#0d6efd" }}>Previous</button>
-                                        </li>
-                                    </>
-                                }
+                                <div class="d-flex justify-content-center">
+                                    <li class="page-item">
+                                        <button onClick={() => setPage(setFirstPage())} disabled={page == 1} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "10px 0px 0px 10px", borderRight: "0px", backgroundColor: page == 1 ? "#e9ecef" : "#ffffff", color: page == 1 ? "#495057" : "#0d6efd" }}>
+                                            <i class="bi bi-skip-backward"></i>
+                                        </button>
+                                    </li>
+                                    <li class="page-item">
+                                        <button onClick={() => setPage(setPreviousPage(page))} disabled={page == 1} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px", backgroundColor: page == 1 ? "#e9ecef" : "#ffffff", color: page == 1 ? "#495057" : "#0d6efd" }}>Previous</button>
+                                    </li>
                                     <li>
                                         <p class="btn" style={{ color: "#ffffff", borderRadius: "0px", borderLeft: "0px", backgroundColor: "#0d6efd" }}>{page}</p>
                                     </li>
                                     <li class="page-item">
-                                        <button onClick={() => setPage(setNextPage(page))} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px 10px 10px 0px", color: "#0d6efd", borderLeft: "0px" }}>Next</button>
+                                        <button onClick={() => setPage(setNextPage(page))} disabled={page == totalPages} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px 10px 10px 0px", borderLeft: "0px", backgroundColor: page == totalPages ? "#e9ecef" : "#ffffff", color: page == totalPages ? "#495057" : "#0d6efd" }}>Next</button>
                                     </li>
                                 </div>
                             </ul>

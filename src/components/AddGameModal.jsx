@@ -2,12 +2,12 @@ import addGameToList from "../functions/addGameToList";
 import { useState } from "react";
 
 function AddGameModal({ handleAdd }) {
-    const [game, setGame] = useState({ name: "", year: "" });
+    const [game, setGame] = useState({ name: "", released: "" });
 
     function handleSaveGame() {
         addGameToList(game);
-        handleAdd(game.name, game.year)
-        setList({ name: "", year: "" });
+        handleAdd(game.name, game.released)
+        setList({ name: "", released: "" });
     }
 
     return (
@@ -27,8 +27,8 @@ function AddGameModal({ handleAdd }) {
                             <div class="mb-3">
                                 <label class="form-label mt-1">Name</label>
                                 <input value={game.name} onChange={e => setGame({ ...game, name: e.target.value })} class="form-control" id="listNameInput" />
-                                <label class="form-label mt-1">Year</label>
-                                <input value={game.year} onChange={e => setGame({ ...game, year: e.target.value })} class="form-control" id="listDescInput" />
+                                <label class="form-label mt-1">Release Year</label>
+                                <input value={game.released} onChange={e => setGame({ ...game, released: e.target.value })} class="form-control" id="listDescInput" />
                             </div>
                         </div>
                         <div class="modal-footer">
