@@ -1,6 +1,7 @@
 import setPreviousPage from "../functions/setPreviousPage";
 import setNextPage from "../functions/setNextPage";
 import setFirstPage from "../functions/setFirstPage";
+import setCurrentPage from "../functions/setCurrentPage";
 import { useEffect, useState } from "react";
 import { getAllGames, getGamesByText } from "../../gamesapi";
 import addGameToList from "../functions/addGameToList";
@@ -12,10 +13,11 @@ function AllGamesList() {
     const [page, setPage] = useState(1);
     const [searchWord, setSearchWord] = useState("");
     const [checkNextPage, setCheckNextPage] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function getMyGames() {
-            const response = await fetch(`http://localhost:8080/mygame/`);
+            const response = await fetch(`http://localhost:3000/mygame/`);
             if (!response.ok) {
                 const message = `Error: ${response.statusText}`;
                 console.error(message);
@@ -35,12 +37,21 @@ function AllGamesList() {
     
     const handleFetch = () => {
         getAllGames(page)
-            .then(data => {setGames(data.results); setCheckNextPage(data.next)});
+            .then(data => {
+                setGames(data.results); 
+                setCheckNextPage(data.next);
+                setIsLoading(false);
+            })
+            .catch(error => console.error(error))
     };
 
     const handleSearch = () => {
         getGamesByText(searchWord, page)
-            .then(data => setGames(data.results))
+            .then(data => {
+                setGames(data.results)
+                setCheckNextPage(data.next);
+                setIsLoading(false);
+            })
             .catch(error => console.error(error))
     }
 
@@ -57,13 +68,17 @@ function AllGamesList() {
 
     function handleDelete(name) {
         setMyGames({
-            games: [...myGames.games, deleteGameFromList(myGames.games.find(e => e.name == name).game_id)]
+            games: [...myGames.games, deleteGameFromList(myGames.games.find(e => e.name == name)._id)]
         })
     }
 
     return (
         <div class="d-flex justify-content-center">
-            {games.length < 1 ? (<></>) :
+            {isLoading 
+            ? <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            :
                 <div style={{ minWidth: "50%" }}>
                         <div class="input-group mb-3">
                             <input value={searchWord} onChange={e => setSearchWord(e.target.value)}type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
@@ -89,7 +104,7 @@ function AllGamesList() {
                                                 handleDelete(myGames.games.find(e => e.name == val.name).name)
                                             }} class="btn btn-danger">Delete</button>
                                             : <button onClick={() => {
-                                                handleAdd({ name: val.name, released: val.released != null ? val.released.slice(0, 4) : "-" })
+                                                handleAdd({ name: val.name, released: val.released != null ? val.released : "-" })
                                             }} class="btn btn-primary">Add</button>}</td>
                                     </tr>
                                 )
@@ -103,18 +118,18 @@ function AllGamesList() {
                             <ul class="pagination justify-content-center">
                                 <div class="d-flex justify-content-center">
                                     <li class="page-item">
-                                        <button onClick={() => setPage(setFirstPage())} disabled={page == 1} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "10px 0px 0px 10px", borderRight: "0px", backgroundColor: page == 1 ? "#e9ecef" : "#ffffff", color: page == 1 ? "#495057" : "#0d6efd" }}>
+                                        <button onClick={() => {setPage(setFirstPage()); setIsLoading(true)}} disabled={page == 1} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "10px 0px 0px 10px", borderRight: "0px", backgroundColor: page == 1 ? "#e9ecef" : "#ffffff", color: page == 1 ? "#495057" : "#0d6efd" }}>
                                             <i class="bi bi-skip-backward"></i>
                                         </button>
                                     </li>
                                     <li class="page-item">
-                                        <button onClick={() => setPage(setPreviousPage(page))} disabled={page == 1} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px", backgroundColor: page == 1 ? "#e9ecef" : "#ffffff", color: page == 1 ? "#495057" : "#0d6efd" }}>Previous</button>
+                                        <button onClick={() => {setPage(setPreviousPage(page)); setIsLoading(true);}} disabled={page == 1} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px", backgroundColor: page == 1 ? "#e9ecef" : "#ffffff", color: page == 1 ? "#495057" : "#0d6efd" }}>Previous</button>
                                     </li>
                                     <li>
-                                        <p class="btn" style={{ color: "#ffffff", borderRadius: "0px", borderLeft: "0px", backgroundColor: "#0d6efd" }}>{page}</p>
+                                        <button onClick={() => {setPage(setCurrentPage(page)); }} type="button" class="btn" style={{ color: "#ffffff", borderRadius: "0px", borderLeft: "0px", backgroundColor: "#0d6efd" }}>{page}</button>
                                     </li>
                                     <li class="page-item">
-                                        <button onClick={() => setPage(setNextPage(page))} disabled={checkNextPage == null} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px 10px 10px 0px", borderLeft: "0px", backgroundColor: checkNextPage == null ? "#e9ecef" : "#ffffff", color: checkNextPage == null ? "#495057" : "#0d6efd" }}>Next</button>
+                                        <button onClick={() => {setPage(setNextPage(page)); setIsLoading(true)}} disabled={checkNextPage == null} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px 10px 10px 0px", borderLeft: "0px", backgroundColor: checkNextPage == null ? "#e9ecef" : "#ffffff", color: checkNextPage == null ? "#495057" : "#0d6efd" }}>Next</button>
                                     </li>
                                 </div>
                             </ul>

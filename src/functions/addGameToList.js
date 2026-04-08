@@ -1,6 +1,6 @@
 async function addGameToList(game) {
     try {
-        const response = await fetch(`http://localhost:8080/mygame/add`, {
+        const response = await fetch(`http://localhost:3000/mygame/add`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",

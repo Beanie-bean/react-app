@@ -1,6 +1,6 @@
 async function editList(list) {
     try {
-        const response = await fetch(`http://localhost:8080/mygame/edit`, {
+        const response = await fetch(`http://localhost:3000/mygame/edit`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",

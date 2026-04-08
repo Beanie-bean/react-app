@@ -1,6 +1,7 @@
 import setPreviousPage from "../functions/setPreviousPage";
 import setNextPage from "../functions/setNextPage";
 import setFirstPage from "../functions/setFirstPage";
+import setCurrentPage from "../functions/setCurrentPage";
 import { useEffect, useState } from "react";
 import deleteGameFromList from "../functions/deleteGameFromList";
 import EditListModal from "./EditListModal";
@@ -14,7 +15,7 @@ function MyGamesList() {
 
     useEffect(() => {
         async function getMyGames() {
-            const response = await fetch(`http://localhost:8080/mygame/`);
+            const response = await fetch(`http://localhost:3000/mygame/`);
             if (!response.ok) {
                 const message = `Error: ${response.statusText}`;
                 console.error(message);
@@ -30,7 +31,7 @@ function MyGamesList() {
     
     function handleDelete(name) {
         setMyGames({
-            games: [...myGames.games, deleteGameFromList(myGames.games.find(e => e.name == name).game_id)]
+            games: [...myGames.games, deleteGameFromList(myGames.games.find(e => e.name == name)._id)]
         })
     }
 
@@ -49,7 +50,7 @@ function MyGamesList() {
 
     return (
         <>
-            <div class="pt-2 row justify-content-end">
+            <div class="row justify-content-end">
                 <div class="col-4 d-flex justify-content-center">
                     <h5 class="d-flex justify-content-center">{myGames.name}</h5>
                 </div>
@@ -70,22 +71,20 @@ function MyGamesList() {
                                     <th width="14%"></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                
-                                    {pageGames.map((val, key) => {
-                                        return (
-                                            <tr key={key}>
-                                                <td>{val.name}</td>
-                                                <td>{val.released}</td>
-                                                <td>
-                                                    <button onClick={() => {
-                                                        handleDelete(val.name);
-                                                    }} class="btn btn-danger">Delete</button>
-                                                </td>
-                                            </tr>
-                                        )
-                                    })}
-                                
+                            <tbody> 
+                                {pageGames.map((val, key) => {
+                                    return (
+                                        <tr key={key}>
+                                            <td>{val.name}</td>
+                                            <td>{val.released}</td>
+                                            <td>
+                                                <button onClick={() => {
+                                                    handleDelete(val.name);
+                                                }} class="btn btn-danger">Delete</button>
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
                             </tbody>
                         </table>
                     }
@@ -102,7 +101,7 @@ function MyGamesList() {
                                         <button onClick={() => setPage(setPreviousPage(page))} disabled={page == 1} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px", backgroundColor: page == 1 ? "#e9ecef" : "#ffffff", color: page == 1 ? "#495057" : "#0d6efd" }}>Previous</button>
                                     </li>
                                     <li>
-                                        <p class="btn" style={{ color: "#ffffff", borderRadius: "0px", borderLeft: "0px", backgroundColor: "#0d6efd" }}>{page}</p>
+                                        <button onClick={() => {setPage(setCurrentPage(page)); }} type="button" class="btn" style={{ color: "#ffffff", borderRadius: "0px", borderLeft: "0px", backgroundColor: "#0d6efd" }}>{page}</button>
                                     </li>
                                     <li class="page-item">
                                         <button onClick={() => setPage(setNextPage(page))} disabled={page == totalPages} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px 10px 10px 0px", borderLeft: "0px", backgroundColor: page == totalPages ? "#e9ecef" : "#ffffff", color: page == totalPages ? "#495057" : "#0d6efd" }}>Next</button>

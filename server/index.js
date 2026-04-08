@@ -8,6 +8,6 @@ app.use(cors())
 app.use(express.json())
 app.use("/mygame", mygames)
 
-app.listen(8080, () => {
-    console.log("8080")
+app.listen(3000, () => {
+    console.log("3000")
 });

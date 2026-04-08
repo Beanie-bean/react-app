@@ -39,9 +39,9 @@ router.patch("/add", async (req, res) => {
       {
         $push: {
           games: {
-            game_id: new ObjectId(),
+            _id: new ObjectId(),
             name: req.body.name,
-            released: req.body.released
+            released: req.body.released.slice(0, 4)
           }
         }
       });
@@ -61,7 +61,7 @@ router.delete("/:id", async (req, res) => {
       {
         $pull: {
           games: {
-            game_id: new ObjectId(req.params.id) 
+            _id: new ObjectId(req.params.id) 
           }
         }
       });

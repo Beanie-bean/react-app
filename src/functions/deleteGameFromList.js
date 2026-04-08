@@ -1,5 +1,5 @@
 async function deleteGameFromList(id) {
-    await fetch(`http://localhost:8080/mygame/${id}`, {
+    await fetch(`http://localhost:3000/mygame/${id}`, {
         method: "DELETE",
     });
 }
