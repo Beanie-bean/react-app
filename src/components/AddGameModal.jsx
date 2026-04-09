@@ -7,12 +7,16 @@ function AddGameModal({ handleAdd }) {
     function handleSaveGame() {
         addGameToList(game);
         handleAdd(game.name, game.released)
-        setList({ name: "", released: "" });
+        setGame({ name: "", released: "" });
+    }
+
+    function handleClose() {
+        setGame({ name: "", released: "" });
     }
 
     return (
         <>  <div class="d-flex justify-content-center mb-3">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addGameModal">
+            <button onClick={handleClose} type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addGameModal">
                 Add Game
             </button>
         </div>
@@ -32,7 +36,7 @@ function AddGameModal({ handleAdd }) {
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" onClick={handleClose} class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="button" onClick={handleSaveGame} class="btn btn-primary" data-bs-dismiss="modal">Save Game</button>
                         </div>
                     </div>

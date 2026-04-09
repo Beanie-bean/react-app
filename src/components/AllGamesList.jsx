@@ -126,7 +126,7 @@ function AllGamesList() {
                                         <button onClick={() => {setPage(setPreviousPage(page)); setIsLoading(true);}} disabled={page == 1} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px", backgroundColor: page == 1 ? "#e9ecef" : "#ffffff", color: page == 1 ? "#495057" : "#0d6efd" }}>Previous</button>
                                     </li>
                                     <li>
-                                        <button onClick={() => {setPage(setCurrentPage(page)); }} type="button" class="btn" style={{ color: "#ffffff", borderRadius: "0px", borderLeft: "0px", backgroundColor: "#0d6efd" }}>{page}</button>
+                                        <button onClick={() => setPage(setCurrentPage(page))} type="button" class="btn" style={{ color: "#ffffff", borderRadius: "0px", borderLeft: "0px", backgroundColor: "#0d6efd" }}>{page}</button>
                                     </li>
                                     <li class="page-item">
                                         <button onClick={() => {setPage(setNextPage(page)); setIsLoading(true)}} disabled={checkNextPage == null} type="button" class="btn" style={{ borderColor: "#dee2e6", borderRadius: "0px 10px 10px 0px", borderLeft: "0px", backgroundColor: checkNextPage == null ? "#e9ecef" : "#ffffff", color: checkNextPage == null ? "#495057" : "#0d6efd" }}>Next</button>
