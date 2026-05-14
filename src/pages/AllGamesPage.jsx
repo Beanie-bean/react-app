@@ -1,12 +1,12 @@
-import AllGamesList from "../components/AllGamesList";
+import AllGames from "../components/AllGames";
 
-function AllGames() {
+function AllGamesPage() {
   return (
     <div style={{ minHeight: '100vh' }}>
       <h2 class="p-3 d-flex justify-content-center">All Games</h2>
-      <AllGamesList />
+      <AllGames />
     </div>
   )
 }
 
-export default AllGames;
+export default AllGamesPage;

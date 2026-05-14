@@ -10,16 +10,13 @@ function AddGameModal({ handleAdd }) {
         setGame({ name: "", released: "" });
     }
 
-    function handleClose() {
-        setGame({ name: "", released: "" });
-    }
-
     return (
-        <>  <div class="d-flex justify-content-center mb-3">
-            <button onClick={handleClose} type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addGameModal">
-                Add Game
-            </button>
-        </div>
+        <>  
+            <div>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addGameModal">
+                    Add Game
+                </button>
+            </div>
             <div class="modal" id="addGameModal" aria-labelledby="addGameModal" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -36,7 +33,7 @@ function AddGameModal({ handleAdd }) {
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" onClick={handleClose} class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="button" onClick={handleSaveGame} class="btn btn-primary" data-bs-dismiss="modal">Save Game</button>
                         </div>
                     </div>

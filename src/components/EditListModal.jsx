@@ -12,9 +12,11 @@ function EditListModal({name, desc, handleEdit}) {
 
     return (
         <>
-            <button onClick={() => setList({name: name, desc: desc})} type="button" class="btn btn-outline-primary me-3" data-bs-toggle="modal" data-bs-target="#editListModal">
-                Edit<i class="ps-1 bi bi-pencil-square"></i>
-            </button>
+            <div>
+                <button onClick={() => setList({name: name, desc: desc})} type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editListModal">
+                    Edit<i class="ps-1 bi bi-pencil-square"></i>
+                </button>
+            </div>
             <div class="modal" id="editListModal" aria-labelledby="editListModal" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -24,9 +26,9 @@ function EditListModal({name, desc, handleEdit}) {
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label class="form-label mt-1">Name</label>
+                                <label class="form-label mt-1 d-flex justify-content-start">Name</label>
                                 <input value={list.name} onChange={e => setList({ ...list, name: e.target.value })} class="form-control" id="listNameInput" />
-                                <label class="form-label mt-1">Description</label>
+                                <label class="form-label mt-1 d-flex justify-content-start">Description</label>
                                 <input value={list.desc} onChange={e => setList({ ...list, desc: e.target.value })} class="form-control" id="listDescInput" />
                             </div>
                         </div>

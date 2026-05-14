@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router';
-import AllGames from './pages/AllGames';
-import MyGames from './pages/MyGames';
+import AllGamesPage from './pages/AllGamesPage';
+import MyGamesPage from './pages/MyGamesPage';
 import Navbar from './components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
@@ -11,8 +11,8 @@ function App() {
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<AllGames />} />;
-        <Route path="/mygames" element={<MyGames />} />;
+        <Route path="/" element={<AllGamesPage />} />;
+        <Route path="/mygames" element={<MyGamesPage />} />;
       </Routes>
     </>
   )

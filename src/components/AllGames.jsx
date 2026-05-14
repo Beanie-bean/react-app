@@ -7,7 +7,7 @@ import { getAllGames, getGamesByText } from "../../gamesapi";
 import addGameToList from "../functions/addGameToList";
 import deleteGameFromList from "../functions/deleteGameFromList";
 
-function AllGamesList() {
+function AllGames() {
     const [games, setGames] = useState([]);
     const [myGames, setMyGames] = useState({ name: "", desc: "", games: [] });
     const [page, setPage] = useState(1);
@@ -46,6 +46,7 @@ function AllGamesList() {
     };
 
     const handleSearch = () => {
+        setIsLoading(true);
         getGamesByText(searchWord, page)
             .then(data => {
                 setGames(data.results)
@@ -56,6 +57,7 @@ function AllGamesList() {
     }
 
     function handleSearchClear() {
+        setIsLoading(true);
         handleFetch();
         setSearchWord("");
     }
@@ -144,4 +146,4 @@ function AllGamesList() {
     )
 }
 
-export default AllGamesList;
+export default AllGames;
